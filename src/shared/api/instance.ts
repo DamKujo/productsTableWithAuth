@@ -1,3 +1,7 @@
+import { URLS } from "../model/config";
+import { User } from "../types/index.type";
+import { authFetch } from "./authorization.service";
+
 type RequestPostBodyParams = {
   [key: string]: any;
 };
@@ -14,9 +18,17 @@ export const commonPostRequest = async (
       expiresInMins: 30,
     }),
   });
-
-  // if (!res.ok) {
-  //   throw new Error(res.statusText);
-  // }
   return res;
 };
+
+export async function getUser(): Promise<User> {
+  const res = await authFetch(URLS.AUTHORIZATION, {
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    throw new Error("Unauthorized");
+  }
+
+  return res.json();
+}

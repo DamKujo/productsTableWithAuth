@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AuthServiceInterface, AuthTokenInterface } from "../types/index.type";
 import { commonPostRequest } from "../api/instance";
 import { create } from "zustand";
-import { EXPIRES_AT } from "./config";
+import { EXPIRES_AT, URLS } from "./config";
 type SessionState = {
   token: AuthTokenInterface | null;
   login: (token: AuthTokenInterface) => void;
@@ -100,12 +100,9 @@ export const useSession = create<SessionState>((set, get) => ({
 
     if (!token) throw new Error("No token");
 
-    const result = await commonPostRequest(
-      "https://dummyjson.com/auth/refresh",
-      {
-        refreshToken: token.token.refreshToken,
-      },
-    );
+    const result = await commonPostRequest(URLS.REFRESH, {
+      refreshToken: token.token.refreshToken,
+    });
 
     if (!result.ok) {
       classAuth.removeToken(token.type);

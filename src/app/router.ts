@@ -1,67 +1,35 @@
-import Authorization from "@/features/auth/authorization.page";
-import ProductsOverview from "@/features/products-overview/products-overview.page";
-import { createBrowserRouter, redirect } from "react-router";
-import { User } from "@/shared/types/index.type";
-import { authFetch } from "../shared/api/authorization.service";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import { RootLayout } from "@/app/root-layout";
-import { AuthService, useSession } from "@/shared/model/session";
+import { ROUTES } from "@/shared/model/config";
+import { protectedLoader, publicLoader } from "./protected-route";
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-    Component: Authorization,
+    path: ROUTES.LOGIN,
+    lazy: async () => {
+      const { default: Component } =
+        await import("@/features/auth/authorization.page");
+      return { Component };
+    },
     loader: publicLoader,
   },
   {
-    path: "/",
+    path: ROUTES.ROOT,
     Component: RootLayout,
     loader: protectedLoader,
     children: [
       {
         index: true,
-        loader: () => redirect("/products"),
+        loader: () => redirect(ROUTES.PRODUCTS),
       },
       {
-        path: "products",
-        Component: ProductsOverview,
+        path: ROUTES.PRODUCTS,
+        lazy: async () => {
+          const { default: Component } =
+            await import("@/features/products-overview/products-overview.page");
+          return { Component };
+        },
       },
     ],
   },
 ]);
-
-async function publicLoader() {
-  const session = useSession.getState();
-  const token = session.token;
-
-  if (!token?.token.accessToken) return null;
-
-  try {
-    await getUser();
-    throw redirect("/products");
-  } catch {
-    return null;
-  }
-}
-
-async function protectedLoader() {
-  const session = useSession.getState();
-  const token = session.token;
-
-  if (!token?.token.accessToken) {
-    throw redirect("/login");
-  }
-
-  return null;
-}
-
-async function getUser(): Promise<User> {
-  const res = await authFetch("https://dummyjson.com/auth/me", {
-    method: "GET",
-  });
-
-  if (!res.ok) {
-    throw new Error("Unauthorized");
-  }
-
-  return res.json();
-}

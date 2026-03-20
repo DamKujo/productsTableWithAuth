@@ -1,8 +1,8 @@
 import { commonPostRequest } from "@/shared/api/instance";
-import { EXPIRES_AT } from "@/shared/model/config";
+import { EXPIRES_AT, URLS } from "@/shared/model/config";
 import { useSession } from "@/shared/model/session";
 import { AuthData } from "@/shared/types/schema";
-import { UseFormSetError } from "react-hook-form/dist/types";
+import { UseFormSetError } from "react-hook-form";
 
 export async function useLogin(
   data: AuthData,
@@ -15,7 +15,7 @@ export async function useLogin(
   const session = useSession.getState();
   const { login, password } = data;
   try {
-    const result = await commonPostRequest("https://dummyjson.com/auth/login", {
+    const result = await commonPostRequest(URLS.LOGIN, {
       username: `${login}`,
       password: `${password}`,
     });
