@@ -180,7 +180,7 @@ const ItemsTable = memo(
               className="cursor-pointer"
               onClick={() => refetch!()}
             >
-              <img src="src/app/assets/refresh.svg" alt="refresh" />
+              <img src="./src/app/assets/refresh.svg" alt="refresh" />
             </Button>
             <AddNewItem />
           </div>

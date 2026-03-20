@@ -42,7 +42,7 @@ export default function AuthCard() {
     <Card className="w-full max-w-sm p-8 bg-linear-to-b from-gray-50 to-white border-4 border-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
       <CardHeader className="gap-3">
         <div className="flex justify-center align-middle">
-          <img src="src/app/assets/icon.svg" alt="icon" />
+          <img src="./src/app/assets/icon.svg" alt="icon" />
         </div>
         <CardTitle className="text-center text-3xl">
           Добро пожаловать!

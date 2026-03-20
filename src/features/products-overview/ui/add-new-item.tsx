@@ -27,7 +27,7 @@ export function AddNewItem() {
             variant={"default"}
             className="bg-blue-700 cursor-pointer p-4"
           >
-            <img src="src/app/assets/plus-in-circle.svg" alt="add" /> Добавить
+            <img src="./src/app/assets/plus-in-circle.svg" alt="add" /> Добавить
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm">
