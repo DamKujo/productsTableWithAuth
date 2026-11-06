@@ -23,10 +23,10 @@ export const router = createBrowserRouter([
         loader: () => redirect(ROUTES.PRODUCTS),
       },
       {
-        path: ROUTES.PRODUCTS,
+        // "/*": nested paths belong to the products remote
+        path: `${ROUTES.PRODUCTS}/*`,
         lazy: async () => {
-          const { default: Component } =
-            await import("@/features/products-overview/products-overview.page");
+          const { default: Component } = await import("@/app/remote-products");
           return { Component };
         },
       },

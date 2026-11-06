@@ -1,3 +1,4 @@
+import iconUrl from "@assets/icon.svg";
 import {
   Card,
   CardContent,
@@ -33,16 +34,17 @@ export default function AuthCard() {
   });
 
   const onSubmit: SubmitHandler<AuthData> = async (data) => {
-    const { data: result } = await useLogin(data, rememberMe, setError);
-    navigate("/products");
-    return result;
+    const user = await useLogin(data, rememberMe, setError);
+    if (user) {
+      navigate("/products");
+    }
   };
 
   return (
     <Card className="w-full max-w-sm p-8 bg-linear-to-b from-gray-50 to-white border-4 border-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
       <CardHeader className="gap-3">
         <div className="flex justify-center align-middle">
-          <img src="./src/app/assets/icon.svg" alt="icon" />
+          <img src={iconUrl} alt="icon" />
         </div>
         <CardTitle className="text-center text-3xl">
           Добро пожаловать!

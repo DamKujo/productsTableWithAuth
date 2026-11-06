@@ -1,9 +1,11 @@
 import { commonPostRequest } from "@/shared/api/instance";
 import { EXPIRES_AT, URLS } from "@/shared/model/config";
 import { useSession } from "@/shared/model/session";
+import { LoginResponse, User } from "@/shared/types/index.type";
 import { AuthData } from "@/shared/types/schema";
 import { UseFormSetError } from "react-hook-form";
 
+// Returns the logged-in user, or null if login failed (the error is set on the form)
 export async function useLogin(
   data: AuthData,
   rememberMe: boolean,
@@ -11,7 +13,7 @@ export async function useLogin(
     login: string;
     password: string;
   }>,
-) {
+): Promise<User | null> {
   const session = useSession.getState();
   const { login, password } = data;
   try {
@@ -23,29 +25,20 @@ export async function useLogin(
     if (!result.ok) {
       throw new Error("Не удалось войти, повторите попытку");
     }
-    const data = await result.json();
+    const { accessToken, refreshToken, ...user }: LoginResponse =
+      await result.json();
     const token = {
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
+      accessToken,
+      refreshToken,
       expiresAt: String(Date.now() + EXPIRES_AT),
     };
-    if (rememberMe) {
-      session.login({
-        token: token,
-        type: "local",
-      });
-    } else {
-      session.login({
-        token: token,
-        type: "session",
-      });
-    }
 
-    return data;
+    session.login({ token, type: rememberMe ? "local" : "session" }, user);
+    return user;
   } catch (err) {
     setError("root", {
       message: "Login failed. Please check your credentials and try again.",
     });
-    return;
+    return null;
   }
 }

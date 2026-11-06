@@ -1,11 +1,2 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import "./index.css";
-import { router } from "@/app/router";
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-);
+// Async boundary: lets Module Federation negotiate shared deps (react, etc.) before the app runs
+import("./bootstrap");
